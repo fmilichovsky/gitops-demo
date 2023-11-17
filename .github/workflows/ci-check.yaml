@@ -1,0 +1,17 @@
+name: CI Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  kustomize-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Validate kustomization overlays
+        run: make validate-kustomizations
