@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This is an environment "inheriting" another one
+resources:
+  - ../dev # Fully inherit the 'dev' overlay.
+  - ../../base/busybox # Add additional resources relevant for the environment.
+
+patches:
+  - path: busybox/version.yaml
+  - path: podinfo/test-seed.yaml # Modify a resource from the "parent" overlay.
