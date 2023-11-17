@@ -15,7 +15,7 @@ export GITHUB_TOKEN=<personal-access-token>
 While pointed at a k8s cluster, run:
 
 ```shell
-flux bootstrap github --owner=fmilichovsky --repository=gitops-demo --path=profiles/dev --branch=$BOOTSTRAP_BRANCH
+flux bootstrap github --owner=fmilichovsky --repository=gitops-demo --path=profiles/$CLUSTER_PROFILE --branch=$BOOTSTRAP_BRANCH
 ```
 
 This sets up Flux components on the cluster, generates key-pairs as secrets on the cluster, and uses the public key
