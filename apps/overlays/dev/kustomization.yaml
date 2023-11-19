@@ -7,3 +7,6 @@ resources:
 patches:
   - path: podinfo/version.yaml
   - path: podinfo/_tracing.yaml
+
+transformers:
+  - registry.yaml
