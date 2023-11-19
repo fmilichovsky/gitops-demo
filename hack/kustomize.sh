@@ -7,7 +7,7 @@
 
 set -o errexit
 
-function render_overlays {
+function kustomize_build {
   suppress_output="$1"
   # Mirror kustomize-controller build options.
   kustomize_flags=("--load-restrictor=LoadRestrictionsNone")
@@ -32,7 +32,30 @@ function render_overlays {
 
 function validate_overlays {
   echo "> INFO - Validating kustomize overlays"
-  render_overlays supress
+  kustomize_build supress
 }
 
-validate_overlays
+function render_overlays {
+  echo "> INFO - Rendering kustomize overlays"
+  kustomize_build
+}
+
+# Parse command-line options.
+while getopts ":r" opt; do
+  case $opt in
+    r)
+      render=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Default behavior is to validate overlays.
+if [ "$render" = true ]; then
+  render_overlays
+else
+  validate_overlays
+fi
