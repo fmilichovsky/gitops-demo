@@ -4,5 +4,8 @@ kind: Kustomization
 resources:
   - ../../base/podinfo
 
+components:
+  - ../../variants/podinfo-us
+
 patches:
   - path: podinfo/version.yaml
