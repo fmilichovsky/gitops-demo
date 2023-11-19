@@ -1,3 +1,7 @@
-.PHONY: validate-kustomizations
+.PHONY: validate-kustomizations render-kustomizations
+
 validate-kustomizations:
-	./hack/validate-kustomizations.sh
+	./hack/kustomize.sh
+
+render-kustomizations:
+	./hack/kustomize.sh -r
