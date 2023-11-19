@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Adapted from https://github.com/fluxcd/flux2-kustomize-helm-example/blob/main/scripts/validate.sh
 

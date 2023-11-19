@@ -1,0 +1,77 @@
+name: Kustomize diff
+
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  kustomize-build:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.profile }}
+    strategy:
+      matrix:
+        # Expand the matrix with every profile that should be rendered.
+        profile: 
+          - dev
+          - test
+          - staging-eu
+          - staging-us
+          - production-eu
+          - production-us
+    steps:
+    - name: Checkout base branch
+      uses: actions/checkout@v3
+      with:
+        path: base
+        ref: ${{ github.base_ref }}
+
+    - name: Checkout head branch
+      uses: actions/checkout@v3
+      with:
+        path: head
+
+    - name: Run diffs
+      id: diff
+      run: |
+        changed=false
+
+        common_path="apps/overlays/${{ matrix.profile }}"
+        base_path="base/$common_path"
+        head_path="head/$common_path"
+        ./head/hack/diff-overlays.sh $base_path $head_path > apps_diff
+        if [ -s apps_diff ]; then
+          changed=true
+        fi
+        echo "changed=${changed}" >> "$GITHUB_OUTPUT"
+
+    - name: Job summary
+      run: |
+        echo "# ${{ matrix.profile }} diffs" >> $GITHUB_STEP_SUMMARY
+
+        echo "## Apps" >> $GITHUB_STEP_SUMMARY
+        if ${{ steps.diff.outputs.changed }} == 'true'
+        then
+            echo "\`\`\`diff" >> $GITHUB_STEP_SUMMARY
+            cat apps_diff >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        else
+            echo "_No diff_" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Determine label name
+      id: label_name
+      run: echo "name=diff:${{ matrix.profile }}" >> "$GITHUB_OUTPUT"
+
+    - name: Add label
+      if: ${{ steps.diff.outputs.changed  == 'true' }}
+      uses: actions-ecosystem/action-add-labels@v1
+      with:
+        labels: ${{ steps.label_name.outputs.name }}
+
+    - name: Remove label
+      if: ${{ contains(github.event.pull_request.labels.*.name, steps.label_name.outputs.name) && steps.diff.outputs.changed  != 'true' }}
+      uses: actions-ecosystem/action-remove-labels@v1
+      with:
+        labels: ${{ steps.label_name.outputs.name }}
