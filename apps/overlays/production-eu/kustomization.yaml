@@ -9,3 +9,4 @@ components:
 
 patches:
   - path: podinfo/version.yaml
+  - path: podinfo/_billing.yaml
