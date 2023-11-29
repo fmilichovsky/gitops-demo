@@ -8,4 +8,4 @@ resources:
 
 patches:
   - path: busybox/version.yaml
-  - path: _podinfo/test-seed.yaml # Modify a resource from the "parent" overlay.
+  - path: podinfo/_test-seed.yaml # Modify a resource from the "parent" overlay.
