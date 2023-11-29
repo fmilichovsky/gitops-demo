@@ -1,0 +1,10 @@
+apiVersion: builtin
+kind: PrefixTransformer
+metadata:
+  name: image-registry
+
+prefix: internal-dev-registry/
+
+fieldSpecs:
+- path: spec/template/spec/containers/image
+- path: spec/template/spec/initContainers/image

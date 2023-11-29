@@ -9,3 +9,6 @@ components:
 
 patches:
   - path: podinfo/version.yaml
+
+transformers:
+  - registry.yaml
